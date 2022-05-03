@@ -1,0 +1,84 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type Query {
+    
+    user(id: Int! @eq): User @find
+    employees: [Employee] @guard
+    employeeslist: [Employee!]! @paginate  @guard
+    employee(id: ID @eq): Employee @find
+    UsersList: [User!]! @paginate
+
+    UserListQuery(start: Int =1,limit: Int=15): [User!]! 
+    @field(resolver: "UserListQuery@paginate")
+
+
+    posts: [Post] @all
+    post(id: Int! @eq): Post @find @guard
+
+}
+
+type Mutation {
+    
+  createEmployee(
+  name: String @rules(apply: ["required"])
+  position: String @rules(apply: ["required"])
+  ): Employee @create @guard
+
+  updateEmployee(
+    id: ID @rules(apply: ["required"])
+    name: String @rules(apply: ["required"])
+    position: String @rules(apply: ["required"])
+  ): Employee @update
+
+  deleteEmployee(
+    id: ID!
+  ): Employee @delete
+
+  createPost(
+    title: String @rules(apply:["required"])
+    content: String 
+    user_id: Int!
+  ): Post @create @guard
+}
+
+
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    posts: [Post] @hasMany
+}
+
+type Employee {
+    id: ID!
+    name: String!
+    position: String!
+}
+
+
+
+type Post {
+    id: ID!
+    title: String!
+    content: String!
+    user: User! @belongsTo
+    comments: [Comment] @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Comment {
+    comment_id: ID!
+    reply: String!
+    post: Post! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
