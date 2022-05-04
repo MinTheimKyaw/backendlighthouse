@@ -1,0 +1,6 @@
+
+type SomeComplexList {
+    id: ID!
+    title: String!
+    reply: String
+}

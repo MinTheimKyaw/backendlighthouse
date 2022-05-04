@@ -148,4 +148,22 @@ class BaseQuery{
 	  $offset = $rowsperpage * ($currentpage - 1);      
       return $offset;
    	}
+	
+	// last  page calculation function
+	function get_lastpage($total,$pagecount)
+	{
+		if($total<$pagecount)
+		{
+			return 1;
+		}
+		else
+		{
+			$return_lastpage=$total/$pagecount;
+			if($return_lastpage>round($return_lastpage))
+				$return_lastpage=round($return_lastpage)+1;
+			else
+				$return_lastpage=round($return_lastpage);
+			return $return_lastpage;
+		}
+	}
 }

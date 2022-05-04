@@ -3,6 +3,26 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 
 "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+"This is data type graphql file call"
+#import datatype.graphql 
+#import reportlisttype.graphql 
+
+type PageInfo {
+  currentPage: Int
+  lastPage: Int
+  total:Int
+}
+
+type PostsPageInfo {
+  data: [Post!]
+  page: PageInfo
+}
+
+
+type SomeComplexQueryPageInfo {
+  data: [SomeComplexList!]
+  page: PageInfo
+}
 
 type Query {
     
@@ -16,7 +36,7 @@ type Query {
     @field(resolver: "UserListQuery@paginate")
 
 
-    posts: [Post] @all
+    
     post(id: Int! @eq): Post @find @guard
 
 }
@@ -45,40 +65,9 @@ type Mutation {
   ): Post @create @guard
 }
 
-
-
-type User {
-    id: ID!
-    name: String!
-    email: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-    posts: [Post] @hasMany
-}
-
-type Employee {
-    id: ID!
-    name: String!
-    position: String!
-}
-
-
-
-type Post {
-    id: ID!
-    title: String!
-    content: String!
-    user: User! @belongsTo
-    comments: [Comment] @hasMany
-    created_at: DateTime!
-    updated_at: DateTime!
-}
-
-type Comment {
-    comment_id: ID!
-    reply: String!
-    post: Post! @belongsTo
-    created_at: DateTime!
-    updated_at: DateTime!
+extend type Query @guard {
+  posts: [Post] @all
+  postlist(first: Int = 20,page: Int = 1,filtertitle: String= "",filtercontent: String= ""): PostsPageInfo @field(resolver: "PostQuery@showAll")
+  SomeComplexQuery(first: Int = 20,page: Int = 1,Search: String=""):SomeComplexQueryPageInfo @field(resolver: "SomeComplexQuery@showAll")
 }
 

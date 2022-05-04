@@ -1,0 +1,35 @@
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    posts: [Post] @hasMany
+}
+
+type Employee {
+    id: ID!
+    name: String!
+    position: String!
+}
+
+
+
+type Post {
+    id: ID!
+    title: String!
+    content: String!
+    user: User! @belongsTo
+    comments: [Comment] @hasMany
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Comment {
+    comment_id: ID!
+    reply: String!
+    post: Post! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
